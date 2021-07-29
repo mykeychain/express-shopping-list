@@ -1,14 +1,10 @@
 "use strict"
 
 const express = require("express");
-const {
-  NotFoundError
-} = require("./expressError");
+const {NotFoundError} = require("./expressError");
 const router = new express.Router();
 
-let {
-  items
-} = require("./fakeDb.js");
+let {items} = require("./fakeDb.js");
 
 /** Returns shopping list in JSON:
  * { items: [
@@ -18,9 +14,7 @@ let {
  */
 router.get("/", function (req, res, next) {
 
-  return res.json({
-    items
-  });
+  return res.json({ items });
 });
 
 /** Accepts new item in JSON, pushes to shopping list, returns added item:
@@ -29,11 +23,10 @@ router.get("/", function (req, res, next) {
  */
 router.post("/", function (req, res, next) {
 
+  //don't blindly push to db
   items.push(req.body);
 
-  return res.json({
-    added: req.body
-  });
+  return res.status(201).json({added: req.body});
 });
 
 /**
@@ -54,8 +47,6 @@ router.get("/:name", function (req, res, next) {
  */
 router.patch("/:name", function (req, res, next) {
   let itemIndex = findItemIndex(req.params.name);
-  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-  console.log(req.body);
   items[itemIndex] = req.body;
 
   return res.json({

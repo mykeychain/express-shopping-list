@@ -2,6 +2,7 @@
 
 const express = require("express")
 const itemRoutes = require("./itemRoutes.js")
+const { NotFoundError } = require("./expressError");
 
 const app = express();
 
@@ -20,12 +21,12 @@ app.use(function (req, res, next) {
     return next(new NotFoundError());
   });
   
-  /** Error handler: logs stacktrace and returns JSON error message. */
-  app.use(function (err, req, res, next) {
+/** Error handler: logs stacktrace and returns JSON error message. */
+app.use(function (err, req, res, next) {
     const status = err.status || 500;
     const message = err.message;
     if (process.env.NODE_ENV !== "test") console.error(status, err.stack);
     return res.status(status).json({ error: { message, status } });
-  });
+});
   
-  module.exports = app;
+module.exports = app;
